@@ -1,1 +1,48 @@
 pytorch
+# add by hua
+# pyTorch install script for NVIDIA Jetson TX1/TX2,
+# from a fresh flashing of JetPack 3.3
+# python=3.5 pytorch=1.0
+# note:  pyTorch documentation calls for use of Anaconda,
+#        however Anaconda isn't available for aarch64.
+#        Instead, we install directly from source using setup.py
+
+sudo apt-get install python3-pip
+
+# upgrade pip,if need
+pip3 --version
+
+
+# clone pyTorch repo
+git clone http://github.com/pytorch/pytorch
+cd pytorch
+----------------
+sudo pip3 install scikit-build
+---
+# install prereqs
+sudo pip3 install -U setuptools
+sudo pip3 install -r requirements.txt
+
+# Develop Mode:
+git submodule update --init --recursive
+python3 setup.py build_deps
+#sudo python3 setup.py develop #err add by hua
+
+sudo pip3 install torchvision
+
+# Install Mode:  (substitute for Develop Mode commands)
+sudo python setup.py install  #ok add by hua
+
+# Verify CUDA (from python interactive terminal)
+# import torch
+# print(torch.cuda.is_available())
+# a = torch.cuda.FloatTensor(2)
+# print(a)
+# b = torch.randn(2).cuda()
+# print(b)
+# c = a + b
+# print(c)
+查询当前工作模式，输入:
+sudo nvpmodel -q verbose
+开启最大频率:
+sudo  ~/jetson_clocks.sh
