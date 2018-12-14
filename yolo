@@ -1,1 +1,21 @@
 yolo
+Clone the latest darknet source code from GitHub.
+
+$ cd ~/project 
+$ git clone https://github.com/pjreddie/darknet yolov3
+$ cd yolov3
+Modify the first few lines of Makefile as follows. Note that CUDA architecture of TX2 is “62”, while TX1 “53”.
+
+GPU=1
+CUDNN=1
+OPENCV=1
+......
+ARCH= -gencode arch=compute_53,code=[sm_53,compute_53] \
+      -gencode arch=compute_62,code=[sm_62,compute_62]
+Build the code.
+
+$ make
+
+### set TX2 to max performance mode
+$ sudo nvpmodel -m 0
+$ sudo ~/jetson_clocks.sh
