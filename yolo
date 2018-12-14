@@ -19,3 +19,7 @@ $ make
 ### set TX2 to max performance mode
 $ sudo nvpmodel -m 0
 $ sudo ~/jetson_clocks.sh
+
+wget https://pjreddie.com/media/files/tiny-yolo-voc.weights
+
+./darknet detector test cfg/coco.data cfg/yolov3.cfg yolov3.weights data/dog.jpg
