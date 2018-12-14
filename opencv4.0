@@ -1,0 +1,52 @@
+https://blog.csdn.net/u011028771/article/details/83663437
+https://blog.csdn.net/qq_38880380/article/details/79716906
+build opencv4.0
+#cmake is ok,but pkg-config ...
+0,down opencv code
+1,install some lib
+..............
+sudo apt-get install gfortran
+sudo apt-get install libopenblas-dev 
+sudo apt-get install liblapack-dev
+sudo apt-get install libatlas-base-dev
+sudo apt-get install fftw3
+......................
+2 in our self-build dir
+sudo
+cmake  -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=/usr/local -DOPENCV_GENERATE_PKGCONFIG=ON ..
+make -j6   #6 / 4
+make install
+3,
+sudo gedit /etc/bash.bashrc
+sudo gedit ~/.bashrc
+export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
+export LD_LIBRARY_PATH=/usr/local/lib
+4,
+pkg-config --modversion opencv4
+sudo cp -r cv2.cpython-35m-aarch64-linux-gnu.so /usr/local/lib/python3.5/dist-packages/
+5, demo
+   #include "opencv2/core.hpp"
+   #include "opencv2/imgproc.hpp"
+   #include "opencv2/highgui.hpp"
+   #include <iostream>
+   
+   using namespace cv;
+   using namespace std;   
+   
+  int main()
+  {
+      cout << "Hello OpenCV " << CV_VERSION << endl;
+  
+          Mat myMat = imread("timg.jpeg", 1);
+
+          namedWindow("Opencv Image", WINDOW_AUTOSIZE);
+  
+          imshow("Opencv Image", myMat);
+  
+          waitKey(5000);
+  
+      return 0;
+  }
+--------------------- 
+6,
+g++ test.cpp `pkg-config --libs --cflags opencv4`
