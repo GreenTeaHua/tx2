@@ -12,6 +12,8 @@ OPENCV=1
 ......
 ARCH= -gencode arch=compute_53,code=[sm_53,compute_53] \
       -gencode arch=compute_62,code=[sm_62,compute_62]
+      
+NVCC=[your nvcc]    #if cnot find the nvcc  
 Build the code.
 
 $ make -j4
