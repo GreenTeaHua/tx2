@@ -14,7 +14,7 @@ ARCH= -gencode arch=compute_53,code=[sm_53,compute_53] \
       -gencode arch=compute_62,code=[sm_62,compute_62]
 Build the code.
 
-$ make
+$ make -j4
 
 ### set TX2 to max performance mode
 $ sudo nvpmodel -m 0
