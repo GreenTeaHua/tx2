@@ -1,0 +1,118 @@
+hua
+0 https://jkjung-avt.github.io/opencv3-on-tx2/
+ other:
+  https://blog.csdn.net/cocoaqin/article/details/78163171
+1--------------------------
+### Remove all old opencv stuffs installed by JetPack (or OpenCV4Tegra)
+$ sudo apt-get purge libopencv*
+### I prefer using newer version of numpy (installed with pip), so
+### I'd remove this python-numpy apt package as well
+$ sudo apt-get purge python-numpy
+### Remove other unused apt packages
+$ sudo apt autoremove
+### Upgrade all installed apt packages to the latest versions (optional)
+$ sudo apt-get update
+$ sudo apt-get dist-upgrade
+### Update gcc apt package to the latest version (highly recommended)
+$ sudo apt-get install --only-upgrade g++-5 cpp-5 gcc-5
+### Install dependencies based on the Jetson Installing OpenCV Guide
+$ sudo apt-get install build-essential make cmake  \
+                       g++ libavformat-dev libavutil-dev \
+                       libswscale-dev libv4l-dev libeigen3-dev \
+                       libglew-dev libgtk2.0-dev
+### Install dependencies for gstreamer stuffs
+$ sudo apt-get install libxine2-dev \
+                       libgstreamer1.0-dev \
+                       libgstreamer-plugins-base1.0-dev
+sudo apt-get install gstreamer1.0-plugins-bad-faad \
+                       gstreamer1.0-plugins-bad-videoparsers
+### Install additional dependencies according to the pyimageresearch
+### article
+$ sudo apt-get install libjpeg8-dev libjpeg-turbo8-dev libtiff5-dev \
+                       libjasper-dev libpng12-dev libavcodec-dev
+$ sudo apt-get install libxvidcore-dev libx264-dev libgtk-3-dev \
+                       libatlas-base-dev gfortran
+$ sudo apt-get install libopenblas-dev liblapack-dev liblapacke-dev
+### Install Qt5 dependencies
+$ sudo apt-get install qt5-default
+### Install dependencies for python3
+$ sudo apt-get install python3-dev python3-pip python3-tk
+$ sudo pip3 install numpy
+$ sudo pip3 install matplotlib
+### Modify matplotlibrc (line #41) as 'backend      : TkAgg'
+$ sudo vim /usr/local/lib/python3.5/dist-packages/matplotlib/mpl-data/matplotlibrc
+### Note that I install numpy with pip, so that I'd be using a newer
+### version of numpy than the apt-get package
+
+2-------------------------------
+get opencv 3.4.4
+get opencv_contrib-3.4.4
+in opencv3.4.4:
+mkdir build
+cd build
+3--------------------------------cmake
+    check:
+    -DWITH_CUDA=ON \
+    -DOPENCV_EXTRA_MODULES_PATH = /home/nvidia/opencv/opencv_contrib-3.4.4/modules \
+---demo:
+cmake -D CMAKE_BUILD_TYPE=RELEASE -D CMAKE_INSTALL_PREFIX=/usr/local \
+        -D WITH_CUDA=ON -D CUDA_ARCH_BIN="6.2" -D CUDA_ARCH_PTX="" \
+        -D WITH_CUBLAS=ON -D ENABLE_FAST_MATH=ON -D CUDA_FAST_MATH=ON \
+        -D ENABLE_NEON=ON -D WITH_LIBV4L=ON -D BUILD_TESTS=OFF \
+        -D BUILD_PERF_TESTS=OFF -D BUILD_EXAMPLES=OFF \
+        -D WITH_QT=ON -D WITH_OPENGL=ON ..
+------------------in build dir:
+sudo cmake ../
+--------------------------------------
+sudo make -j6  #4 / 6
+--------------------------------------------------
+sudo make install
+------------------------------------------
+4. 
+pkg-config --modversion opencv
+
+----------------------------
+https://blog.csdn.net/woainishifu/article/details/77449373
+3.1 g++
+display.cpp
+#include <stdio.h>
+#include <opencv2/opencv.hpp>
+#include <iostream>
+using namespace cv;
+
+int main()
+{
+    Mat image = imread("/home/nvidia/Pictures/Qt.png", 1);
+    if (image.empty())
+    {
+        std::cout << "Image file is empty." << std::endl;
+        return -1;
+    }
+
+    namedWindow("Test");
+    imshow("Test", image);
+
+    waitKey(0);
+
+    return 0;
+}
+
+
+g++ demo.cpp -o demo.o `pkg-config --cflags --libs opencv` 
+g++ Dis2.cpp -o Dis.o `pkg-config --cflags --libs opencv`
+for opencv 4.0 `pkg-config --cflags --libs opencv4`
+
+
+./demo.o
+ display the qt logo.
+----------------------------
+python
+-----------------
+ls /usr/local/lib/python3.5/dist-packages/cv2.*
+if there is no :
+/usr/local/lib/python3.5/dist-packages/cv2.cpython-35m-aarch64-linux-gnu.so
+do this:
+sudo cp -r cv2.cpython-35m-aarch64-linux-gnu.so /usr/local/lib/python3.5/dist-packages/
+test:
+python3 -c 'import cv2; print(cv2.__version__)'
+ it will show: 3.4.4.
