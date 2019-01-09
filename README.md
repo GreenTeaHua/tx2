@@ -1,7 +1,7 @@
 # tx2
   cuda 9.0     ok
   
-  python 3.5   ok
+  python 3.5   ok   using: python3
   
   python 2.7   remove by hua
   
